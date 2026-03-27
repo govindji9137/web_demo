@@ -1,60 +1,172 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Polynomial based logistic Regression</title>
     <style>
+        /* Base Colors */
+        :root {
+            --bg-color: #121826;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --border-glow: linear-gradient(90deg, #38bdf8, #818cf8, #38bdf8);
+        }
+
+        /* Light Mode Colors */
+        [data-theme="light"] {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --accent-color: #0ea5e9;
+            --border-glow: linear-gradient(90deg, #0ea5e9, #3b82f6, #0ea5e9);
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 50px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
+
+        /* Main Card Container */
         .form-container {
-            max-width: 500px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-        }
-        .form-container input {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
             width: 100%;
-            padding: 10px;
-            margin: 5px 0 20px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
+            max-width: 450px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            transition: background-color 0.4s ease;
         }
-        .form-container input[type="submit"] {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
+
+        /* Subtle Animated Border (The "Safe Masala") */
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: var(--border-glow);
+            background-size: 200%;
+            z-index: -1;
+            border-radius: 18px;
+            animation: borderGlow 4s linear infinite;
         }
-        .form-container input[type="submit"]:hover {
-            background-color: #45a049;
+
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
         }
-        .result {
-            font-size: 1.5em;
-            color: #4CAF50;
+
+        h2 {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 24px;
+            color: var(--accent-color);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(128, 128, 128, 0.3);
+            background-color: transparent;
+            color: var(--text-color);
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+        }
+
+        input[type="submit"] {
+            padding: 14px;
+            border-radius: 8px;
+            border: none;
+            background-color: #22c55e; /* Green button jaisa original mein tha */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #16a34a;
+            transform: translateY(-2px);
+        }
+
+        /* Theme Toggle Button */
+        #theme-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--accent-color);
+            background: transparent;
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        #theme-btn:hover {
+            background-color: var(--accent-color);
+            color: white;
         }
     </style>
 </head>
 <body>
+
+    <button id="theme-btn" onclick="toggleTheme()">🌓 Dark/Light</button>
+
     <div class="form-container">
         <h2>Polynomial based logistic Regression</h2>
+        
         <form action="/predict" method="post">
             <label for="x1">x1:</label>
-            <input type="number" step="any" name="x1" required>
+            <input type="text" id="x1" name="x1" required>
             
             <label for="x2">x2:</label>
-            <input type="number" step="any" name="x2" required>
-            
+            <input type="text" id="x2" name="x2" required>
             
             <input type="submit" value="Predict">
         </form>
-        {% if prediction_text %}
-        <div class="result">{{ prediction_text }}</div>
-        {% endif %}
     </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            if (body.hasAttribute('data-theme')) {
+                body.removeAttribute('data-theme');
+            } else {
+                body.setAttribute('data-theme', 'light');
+            }
+        }
+    </script>
+
 </body>
 </html>
